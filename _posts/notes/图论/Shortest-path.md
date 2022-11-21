@@ -1030,6 +1030,90 @@ int main(void)
 ```
 {% endfolding %}
 
+### 次短路
+
+[模板](https://www.luogu.com.cn/problem/P2865)。
+
+直接套用 Dijkstra 算法，但是要记录两个 $d$ 数组，分别保存最短路和次短路。
+
+具体一点，如果发现了一条新的 $1\rightarrow i$ 的最短路，那么存在以下几种可能：
+
+- 这是最短路，则更新最短路，并将次短路替换为原来的最短路；
+- 等于最短路，没用（因为是严格次短路）；
+- 大于最短路但是小于次短路，则替换次短路；
+- 否则没用。
+
+无论如何，更新之后都要 `push`，因为接下来都可能需要更新（即使是次短路）。判断是否已经更新过的条件就是当前的距离是否已经比次短路还要大。
+
+{% folding cyan::查看代码 %}
+```cpp
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+struct edge {
+    int from, to, dist;
+    edge(int from = 0, int to = 0, int dist = 0) :
+        from(from), to(to), dist(dist) {}
+};
+
+int n, m;
+int d[2][5005];
+vector <edge> edges;
+vector <int> G[5005];
+
+inline void addedge(int u, int v, int d)
+{
+    edges.push_back(edge(u, v, d));
+    G[u].push_back(edges.size() - 1);
+}
+
+void Dijkstra2(void)
+{
+    #define pii pair<int, int>
+    priority_queue <pii, vector<pii>, greater<pii>> q;
+    memset(d, 0x3f, sizeof(d));
+    d[0][1] = 0;
+    q.push(make_pair(0, 1));
+    while (!q.empty()) {
+        int dis = q.top().first, u = q.top().second; q.pop();
+        if (dis > d[1][u]) continue;
+        for (int i = 0; i < G[u].size(); ++i) {
+            edge &e = edges[G[u][i]];
+            if (d[0][e.to] > dis + e.dist) {
+                d[1][e.to] = d[0][e.to];
+                d[0][e.to] = dis + e.dist; // 原来最短路变成次短路
+                q.push(make_pair(d[0][e.to], e.to));
+            } else if (d[1][e.to] > dis + e.dist && d[0][e.to] < dis + e.dist) {
+                d[1][e.to] = dis + e.dist;
+                q.push(make_pair(d[1][e.to], e.to)); // 次短路可能被用于接下来的次短路更新
+            }
+        }
+    }
+}
+
+int main(void)
+{
+    scanf("%d%d", &n, &m);
+    while (m--) {
+        int u, v, d;
+        scanf("%d%d%d", &u, &v, &d);
+        addedge(u, v, d);
+        addedge(v, u, d);
+    }
+    Dijkstra2();
+    printf("%d\n", d[1][n]);
+    return 0;
+}
+```
+{% endfolding %}
+
+当然还有 k 短路，不过非常的麻烦，会在专门的地方进行讨论。
+
 ## 差分约束系统
 
 还记得负环吗？负环能做什么呢？就在这里，差分约束系统。
@@ -1116,90 +1200,6 @@ int main(void)
 有的约束条件会出现为 $x_i-x_j \ge y$，那么只需要两边乘 $-1$ 得到 $x_j-x_i \le -y$。如果出现了相等，只需要将其拆分成 $x_i-x_j \ge y$ 和 $x_i-x_j \le y$ 即可。
 
 如果要求正数解，我们只需要给所有值加上一个足够大的数即可，这样不等式组依然成立。
-
-## 次短路
-
-[模板](https://www.luogu.com.cn/problem/P2865)。
-
-直接套用 Dijkstra 算法，但是要记录两个 $d$ 数组，分别保存最短路和次短路。
-
-具体一点，如果发现了一条新的 $1\rightarrow i$ 的最短路，那么存在以下几种可能：
-
-- 这是最短路，则更新最短路，并将次短路替换为原来的最短路；
-- 等于最短路，没用（因为是严格次短路）；
-- 大于最短路但是小于次短路，则替换次短路；
-- 否则没用。
-
-无论如何，更新之后都要 `push`，因为接下来都可能需要更新（即使是次短路）。判断是否已经更新过的条件就是当前的距离是否已经比次短路还要大。
-
-{% folding cyan::查看代码 %}
-```cpp
-#include <iostream>
-#include <cstdio>
-#include <vector>
-#include <queue>
-#include <cstring>
-
-using namespace std;
-
-struct edge {
-    int from, to, dist;
-    edge(int from = 0, int to = 0, int dist = 0) :
-        from(from), to(to), dist(dist) {}
-};
-
-int n, m;
-int d[2][5005];
-vector <edge> edges;
-vector <int> G[5005];
-
-inline void addedge(int u, int v, int d)
-{
-    edges.push_back(edge(u, v, d));
-    G[u].push_back(edges.size() - 1);
-}
-
-void Dijkstra2(void)
-{
-    #define pii pair<int, int>
-    priority_queue <pii, vector<pii>, greater<pii>> q;
-    memset(d, 0x3f, sizeof(d));
-    d[0][1] = 0;
-    q.push(make_pair(0, 1));
-    while (!q.empty()) {
-        int dis = q.top().first, u = q.top().second; q.pop();
-        if (dis > d[1][u]) continue;
-        for (int i = 0; i < G[u].size(); ++i) {
-            edge &e = edges[G[u][i]];
-            if (d[0][e.to] > dis + e.dist) {
-                d[1][e.to] = d[0][e.to];
-                d[0][e.to] = dis + e.dist; // 原来最短路变成次短路
-                q.push(make_pair(d[0][e.to], e.to));
-            } else if (d[1][e.to] > dis + e.dist && d[0][e.to] < dis + e.dist) {
-                d[1][e.to] = dis + e.dist;
-                q.push(make_pair(d[1][e.to], e.to)); // 次短路可能被用于接下来的次短路更新
-            }
-        }
-    }
-}
-
-int main(void)
-{
-    scanf("%d%d", &n, &m);
-    while (m--) {
-        int u, v, d;
-        scanf("%d%d%d", &u, &v, &d);
-        addedge(u, v, d);
-        addedge(v, u, d);
-    }
-    Dijkstra2();
-    printf("%d\n", d[1][n]);
-    return 0;
-}
-```
-{% endfolding %}
-
-当然还有 k 短路，不过非常的麻烦，会在专门的地方进行讨论。
 
 ## Problemset
 

@@ -3,6 +3,10 @@
 
 using namespace std;
 
+void MAIN(void) {
+    
+}
+
 int main(void)
 {
     
