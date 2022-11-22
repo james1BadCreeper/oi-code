@@ -391,7 +391,7 @@ void calc(i64 n, i64 *ans)
 {
     static int a[15];
     int len = 0; i64 tmp = n;
-    while (tmp) a[++len] = tmp % 10, n /= 10;
+    while (tmp) a[++len] = tmp % 10, tmp /= 10;
     for (int i = len; i >= 1; --i) {
         // 首先考虑后 i - 1 位的贡献
         for (int j = 0; j < 10; ++j) ans[j] += f[i - 1] * a[i]; // 满 i-1 位的数字，有 a[i] 个（不算以 0 打头，因为下一位的时候会考虑）
