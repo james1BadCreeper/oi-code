@@ -11,6 +11,7 @@ categories:
 tag:
     - 动态规划
     - 背包
+    - 笔记
 hide: true
 group: notes
 status: done

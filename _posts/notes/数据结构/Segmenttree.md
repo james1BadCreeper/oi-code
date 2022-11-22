@@ -11,6 +11,7 @@ plugins:
 tag:
     - 数据结构
     - 线段树
+    - 笔记
 abbrlink: 89bb6fd1
 date: 2022-08-06 20:08:43
 group: notes

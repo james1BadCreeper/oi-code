@@ -8,6 +8,7 @@ categories:
 tag:
     - 数论
     - 数学
+    - 笔记
 plugins:
     - katex
 abbrlink: d8a80121

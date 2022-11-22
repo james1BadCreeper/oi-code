@@ -10,6 +10,7 @@ categories:
 tag:
     - 动态规划
     - 线性 DP
+    - 笔记
 hide: true
 group: notes
 headimg: https://s1.ax1x.com/2022/08/04/vm910J.jpg

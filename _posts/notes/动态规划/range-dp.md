@@ -12,6 +12,7 @@ tag:
     - 动态规划
     - 区间 DP
     - 线性 DP
+    - 笔记
 abbrlink: 1177a5e3
 group: notes
 hide: true

@@ -10,6 +10,7 @@ categories:
 tag:
     - 分块
     - 数据结构
+    - 笔记
 hide: true
 status: working
 group: notes

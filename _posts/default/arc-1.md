@@ -7,6 +7,7 @@ categories:
 tag:
     - ATCoder
     - 刷
+    - 笔记
 plugins:
     - katex
 headimg: 'https://pic1.imgdb.cn/item/636a0c7d16f2c2beb1e9cddb.jpg'

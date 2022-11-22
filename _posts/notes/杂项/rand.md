@@ -8,6 +8,7 @@ categories:
     - 学习笔记
 tag:
     - 随机化
+    - 笔记
 headimg: https://s1.ax1x.com/2022/08/04/vm9lm4.jpg
 group: notes
 hide: true

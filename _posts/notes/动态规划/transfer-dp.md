@@ -14,6 +14,7 @@ tag:
     - 四边形不等式
     - 单调队列
     - 数据结构优化
+    - 笔记
 headimg: https://pic1.imgdb.cn/item/6366119716f2c2beb1ab6ef8.jpg
 group: notes
 hide: true

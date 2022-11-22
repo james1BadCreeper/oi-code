@@ -12,6 +12,7 @@ tag:
     - 差分
     - 单调栈
     - 单调队列
+    - 笔记
 cover: false
 abbrlink: 37f7d707
 status: working

@@ -13,6 +13,7 @@ tag:
     - Treap
     - Splay
     - FHQ-Treap
+    - 笔记
 abbrlink: 9fce88cb
 date: 2022-09-07 23:15:22
 group: notes

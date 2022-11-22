@@ -11,6 +11,7 @@ tag:
     - 图论
     - 最短路
     - 差分约束
+    - 笔记
 group: notes
 hide: true
 abbrlink: 6bbbc5e9

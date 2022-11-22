@@ -2,14 +2,15 @@
 title: Codeforces Div.2 VP 记录
 cover: false
 categories:
-  - 算法竞赛
-  - 比赛记录
+    - 算法竞赛
+    - 比赛记录
 tag:
-  - Div.2
-  - Codeforces
-  - 比赛
+    - Div.2
+    - Codeforces
+    - 比赛
+    - 笔记
 plugins:
-  - katex
+    - katex
 headimg: 'https://pic.imgdb.cn/item/6371c85216f2c2beb12c24ef.jpg'
 abbrlink: d71fa5a7
 date: 2022-11-14 16:13:10

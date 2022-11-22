@@ -14,6 +14,7 @@ tag:
     - 树的重心
     - 树链剖分
     - 树上差分
+    - 笔记
 headimg: https://s1.ax1x.com/2022/08/04/vm9ZYq.jpg
 group: notes
 hide: true

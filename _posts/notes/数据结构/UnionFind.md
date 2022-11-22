@@ -9,6 +9,7 @@ plugins:
 tag:
     - 数据结构
     - 并查集
+    - 笔记
 cover: false
 headimg: 'https://s1.ax1x.com/2022/08/08/vMOnSK.png'
 abbrlink: c517589e

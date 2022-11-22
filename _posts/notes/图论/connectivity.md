@@ -8,6 +8,7 @@ categories:
     - 学习笔记
 tag:
     - 图论
+    - 笔记
 headimg: 'https://s1.ax1x.com/2022/08/04/vmu0Re.jpg'
 group: notes
 hide: true

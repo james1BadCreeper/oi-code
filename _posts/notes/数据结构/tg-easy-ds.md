@@ -12,6 +12,7 @@ categories:
 tag:
     - ST 表
     - 树状数组
+    - 笔记
 headimg:
 group: notes
 hide: ture

@@ -12,6 +12,7 @@ tag:
     - 概率
     - 期望
     - 数学
+    - 笔记
 headimg: https://pic.imgdb.cn/item/6312b70216f2c2beb17ef8d5.jpg
 group: notes
 hide: true

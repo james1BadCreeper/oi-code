@@ -8,8 +8,9 @@ categories:
     - 算法竞赛
     - 学习笔记
 tag:
-  - 数论
-  - 数学
+    - 数论
+    - 数学
+    - 笔记
 group: notes
 hide: true
 abbrlink: 7f8fede0

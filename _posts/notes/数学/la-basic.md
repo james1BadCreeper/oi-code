@@ -13,6 +13,7 @@ tag:
     - 矩阵快速幂
     - 高斯消元
     - 数学
+    - 笔记
 headimg:
 group: notes
 hide: true

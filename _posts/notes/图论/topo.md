@@ -9,6 +9,7 @@ categories:
     - 图论
 tag:
     - 图论
+    - 笔记
 headimg: https://s1.ax1x.com/2022/08/04/vm9ef0.jpg
 group: notes
 hide: true

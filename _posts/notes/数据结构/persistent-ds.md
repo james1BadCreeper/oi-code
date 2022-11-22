@@ -9,6 +9,7 @@ categories:
     - 数据结构
 tag:
     - 可持久化
+    - 笔记
 group: notes
 hide: true
 status: working

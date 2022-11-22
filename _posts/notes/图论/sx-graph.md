@@ -10,6 +10,7 @@ categories:
 tag:
     - 图论
     - 生成树
+    - 笔记
 abbrlink: 9acb5cb3
 date: 2022-10-14 16:55:16
 hide: true

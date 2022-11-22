@@ -10,6 +10,7 @@ categories:
 tag:
     - 组合数学
     - 数学
+    - 笔记
 group: notes
 hide: true
 status: working

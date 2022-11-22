@@ -10,6 +10,7 @@ tag:
     - 动态规划
     - 计数 DP
     - 数位 DP
+    - 笔记
 headimg: https://s1.ax1x.com/2022/08/04/vm9ulT.jpg
 group: notes
 hide: true
