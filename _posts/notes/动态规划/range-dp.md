@@ -1099,6 +1099,76 @@ int main(void)
 ```
 {% endfolding %}
 
+#### [THUSC2016] 成绩单
+
+{% noteblock %}
+[Portal](https://www.luogu.com.cn/problem/P5336).
+
+期末考试结束了，班主任 L 老师要将成绩单分发到每位同学手中。L 老师共有 $n$ 份成绩单，按照编号从 $1$ 到 $n$ 的顺序叠放在桌子上，其中编号为 $i$ 的的成绩单分数为 $W_i$。       
+成绩单是按照批次发放的。发放成绩单时，L 老师会从当前的一叠成绩单中抽取连续的一段，让这些同学来领取自己的成绩单。当这批同学领取完毕后，L 老师再从剩余的成绩单中抽取连续的一段，供下一批同学领取。经过若干批次的领取后，成绩单将被全部发放到同学手中。对于一个分发成绩单的方案，我们定义其代价为：    
+
+$$a \times k + b \times \sum_{i = 1} ^ k (max_i - min_i) ^ 2$$        
+
+其中 $k$ 是分发的批次数，对于第 $i$ 披分发的成绩单，$max_i$ 是最高分数，$min_i$ 是最低分数，$a$ 和 $b$ 是给定的评估参数。现在，请你帮助 L 老师找到代价最小的分发成绩单的方案，并将这个最小的代价告诉 L 老师。当然，分发成绩单的批次数 $k$ 是你决定的。
+
+$n\le 50$。
+{% endnoteblock %}
+
+设 $g(i,j)$ 代表区间 $[i,j]$ 全部取走的答案。初始时 $g(i,i)=a$，答案是 $g(1,n)$。现在考虑转移，我们设 $f(i,j,x,y)$ 代表区间 $[i,j]$ 中所有成绩单（可以有发走的）中的最大值为 $y$，最小值为 $x$ 时，发放的最小代价，那么：
+
+$$
+g(i,j)=\min\{f(i,j,x,y)+a+b\times (x-y)^2\}
+$$
+
+显然在 DP 之前需要先离散化，现在考虑 $f$ 如何求解。
+
+$f$ 可以是 $[l,r-1]$ 和 $r$ 合并得来的，也可以是从 $f(i,k,x,y)+g(k+1,j)$ 转移过来的。
+
+{% folding cyan::查看代码 %}
+```cpp
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+#define rep(i, l, r) for (int i = l; i <= r; ++i)
+
+using namespace std;
+inline int F(int x) { return x * x; }
+
+int n, a, b;
+int w[55], l[55];
+int f[55][55][55][55], g[55][55];
+
+int main(void)
+{
+    scanf("%d%d%d", &n, &a, &b);
+    for (int i = 1; i <= n; ++i) 
+        scanf("%d", w + i), l[i] = w[i];
+    sort(l + 1, l + n + 1);
+    int m = unique(l + 1, l + n + 1) - (l + 1);
+    for (int i = 1; i <= n; ++i)
+        w[i] = lower_bound(l + 1, l + m + 1, w[i]) - l;
+    memset(f, 0x3f, sizeof(f));
+    memset(g, 0x3f, sizeof(g));
+    for (int i = 1; i <= n; ++i)
+        f[i][i][w[i]][w[i]] = 0, g[i][i] = a;
+    for (int len = 1; len <= n; ++len)
+        for (int i = 1; i <= n - len + 1; ++i) {
+            int j = i + len - 1;
+            rep(x, 1, m) rep(y, x, m) {
+                f[i][j][min(x, w[j])][max(y, w[j])] = min(f[i][j][min(x, w[j])][max(y, w[j])], f[i][j - 1][x][y]);
+                for (int k = i; k < j; ++k)
+                    f[i][j][x][y] = min(f[i][j][x][y], f[i][k][x][y] + g[k + 1][j]);
+            }
+            rep(x, 1, m) rep(y, x, m)
+                g[i][j] = min(g[i][j], f[i][j][x][y] + a + b * F(l[y] - l[x]));
+        }
+    printf("%d\n", g[1][n]);
+    return 0;
+}
+```
+{% endfolding %}
+
 ## 小结
 
 区间 DP 和高维 DP 是线性结构上比较难的一类 DP，但只要多写题，也不是什么难事。
