@@ -947,7 +947,6 @@ int main(void) {
 #include <iostream>
 #include <cstdio>
 #include <vector>
-#include <bitset>
 
 using namespace std;
 
@@ -956,7 +955,7 @@ int st[100005], tot = 0;
 bool ins[100005];
 int dfn[100005], low[100005], num = 0;
 int cnt = 0, c[100005];
-vector <int> G[100005];
+vector<int> G[100005];
 bool flag[100005];
 
 void tarjan(int x) {
@@ -1053,6 +1052,73 @@ int main(void) {
         if (out[i] == 0) ans = siz[i], ++flag;
     if (flag > 1) puts("0");
     else printf("%d\n", ans);
+    return 0;
+}
+```
+{% endfolding %}
+
+#### [USACO5.3] Network of Schools 
+
+[Portal](https://www.luogu.com.cn/problem/P2746).
+
+第二问的答案是缩点之后入度为 $0$ 的点的个数和出度为 $0$ 的点的个数的最大值。特别地，当只有一个 SCC 时，答案为 $0$。
+
+{% folding cyan::查看代码 %}
+```cpp
+#include <iostream>
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+
+int n;
+int st[10005], tot = 0;
+bool ins[10005];
+int dfn[10005], low[10005], num = 0;
+int cnt = 0, c[10005];
+vector <int> G[10005];
+bool flag[10005];
+
+void tarjan(int x) {
+    dfn[x] = low[x] = ++num;
+    ins[st[++tot] = x] = true;
+    for (int y : G[x])
+        if (!dfn[y]) {
+            tarjan(y);
+            low[x] = min(low[x], low[y]);
+        } else if (ins[y]) low[x] = min(low[x], dfn[y]);
+    if (low[x] == dfn[x]) {
+        int y; ++cnt;
+        do {
+            y = st[tot--]; ins[y] = false;
+            c[y] = cnt;
+        } while (x != y);
+    }
+}
+
+int in[10005], out[10005];
+
+int main(void) {
+    scanf("%d", &n);
+    for (int i = 1; i <= n; ++i) {
+        int j;
+        while (scanf("%d", &j) == 1 && j) G[i].push_back(j);
+    }
+    for (int i = 1; i <= n; ++i)
+        if (!dfn[i]) tarjan(i);
+    for (int i = 1; i <= n; ++i) 
+        for (int j : G[i])
+            if (c[i] != c[j]) {
+                flag[c[j]] = true;
+                ++in[c[j]], ++out[c[i]];
+            }
+    int ans = 0, p = 0, q = 0;
+    for (int i = 1; i <= cnt; ++i) {
+        ans += (flag[i] == 0);
+        p += (in[i] == 0);
+        q += (out[i] == 0);
+    }
+    printf("%d\n%d\n", ans, cnt == 1 ? 0 : max(p, q));
     return 0;
 }
 ```
