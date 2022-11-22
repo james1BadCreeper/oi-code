@@ -1,39 +1,50 @@
 #include <iostream>
 #include <cstdio>
-#include <algorithm>
-#define rep(i, l, r) for (int i = l; i <= r; ++i)
+#include <vector>
+#include <cstring>
 
 using namespace std;
-inline int F(int x) { return x * x; }
+typedef long long i64;
 
-int n, a, b;
-int w[55], l[55];
-int f[55][55][55][55], g[55][55];
+struct edge {
+    int v, d;
+};
 
+int n, m, siz[2005];
+i64 f[2005][2005];
+vector<edge> G[2005];
+
+void dp(int x, int fa) 
+{
+    siz[x] = 1; f[x][0] = f[x][1] = 0;
+    for (int i = 0; i < G[x].size(); ++i) {
+        int y = G[x][i].v; i64 w = G[x][i].d;
+        if (y != fa) {
+            dp(y, x); siz[x] += siz[y];
+            for (int j = min(m, siz[x]); j >= 0; --j) {
+                if (f[x][j] != -1)
+                    f[x][j] += f[y][0] + w * siz[y] * (n - m - siz[y]);
+                for (int k = min(j, siz[y]); k >= 0; --k) {
+                    if (f[x][j - k] == -1) continue;
+                    i64 val = 1ll * k * (m - k) + 1ll * (siz[y] - k) * (n - m - (siz[y] - k));
+                    f[x][j] = max(f[x][j], f[x][j - k] + f[y][k] + val * w);
+                }
+            }
+        }
+    }
+}
+                
 int main(void)
 {
-    scanf("%d%d%d", &n, &a, &b);
-    for (int i = 1; i <= n; ++i) 
-        scanf("%d", w + i), l[i] = w[i];
-    sort(l + 1, l + n + 1);
-    int m = unique(l + 1, l + n + 1) - (l + 1);
-    for (int i = 1; i <= n; ++i)
-        w[i] = lower_bound(l + 1, l + m + 1) - l;
-    memset(f, 0x3f, sizeof(f));
-    memset(g, 0x3f, sizeof(g));
-    for (int i = 1; i <= n; ++i)
-        f[i][i][a[i]][a[i]] = 0, g[i][i] = a;
-    for (int len = 2; len <= n; ++len)
-        for (int i = 1; i <= n - len + 1; ++i) {
-            int j = i + len - 1;
-            rep(x, 1, m) rep(y, x, m) {
-                f[i][j][min(x, a[r])][max(y, a[r])] = f[i][j - 1][x][y];
-                for (int k = l; k < r; ++k)
-                    f[i][j][x][y] = min(f[i][j][x][y], f[i][k][x][y] + g[k + 1][r]);
-            }
-            rep(x, 1, m) rep(y, x, m)
-                g[i][j] = min(g[i][j], f[i][j][x][y] + a + b * F(l[y] - l[x]));
-        }
-    printf("%d\n", g[1][n]);
+    memset(f, -1, sizeof(f));
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i < n; ++i) {
+        int u, v, d;
+        scanf("%d%d%d", &u, &v, &d);
+        G[u].push_back({v, d});
+        G[v].push_back({u, d});
+    }
+    dp(1, 0);
+    printf("%lld\n", f[1][m]);
     return 0;
 }
