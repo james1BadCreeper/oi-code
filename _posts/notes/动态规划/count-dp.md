@@ -373,6 +373,52 @@ int main(void)
 
 设 $f(i)$ 代表满 $i$ 位数的每个数字的出现个数。前 $i-1$ 位的数字贡献是 $10f(i-1)$，第 $i$ 位的数字贡献是 $10^{i-1}$。
 
-现在考虑如何统计答案。将上界从高到低位枚举，
+现在考虑如何统计答案。将上界从高到低位枚举，不贴着上界时后面可以随便取，贴着时只能取到上界。如果有前导零还需要减去。
+
+{% folding cyan::查看代码 %}
+```cpp
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+typedef long long i64;
+
+i64 l, r;
+i64 f[15], poww[15];
+i64 ans1[15], ans2[15];
+
+void calc(i64 n, i64 *ans)
+{
+    static int a[15];
+    int len = 0; i64 tmp = n;
+    while (tmp) a[++len] = tmp % 10, n /= 10;
+    for (int i = len; i >= 1; --i) {
+        // 首先考虑后 i - 1 位的贡献
+        for (int j = 0; j < 10; ++j) ans[j] += f[i - 1] * a[i]; // 满 i-1 位的数字，有 a[i] 个（不算以 0 打头，因为下一位的时候会考虑）
+        // 再考虑第 i 位的贡献
+        for (int j = 0; j < a[i]; ++j) ans[j] += poww[i - 1]; // 0 ~ a[i]-1 都会出现 10^(i-1) 次
+        n -= poww[i - 1] * a[i]; // 减掉第 i 位后的数字
+        ans[a[i]] += n + 1; // a[i] 会在 0~n 出现一次
+        // 最后处理前导零
+        ans[0] -= poww[i - 1]; // 当第 i 位为 0 时，答案就没有意义，此时剩下的可以随便填，都需要减去
+    }
+}
+
+int main(void)
+{
+    cin >> l >> r;
+    poww[0] = 1;
+    for (int i = 1; i <= 13; ++i) {
+        f[i] = f[i - 1] * 10 + poww[i - 1]; 
+        poww[i] = poww[i - 1] * 10;
+    }
+    calc(r, ans1); calc(l - 1, ans2);
+    for (int i = 0; i < 10; ++i)
+        printf("%lld ", ans1[i] - ans2[i]);
+    putchar('\n');
+    return 0;
+}
+```
+{% endfolding %}
 
 ## Problemset
