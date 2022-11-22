@@ -1,5 +1,5 @@
 ---
-title: 拓扑排序与用 Tarjan 解决图的连通性问题
+title: 拓扑排序与 Tarjan 相关的图的连通性问题
 cover: false
 plugins:
     - katex
@@ -13,7 +13,7 @@ group: notes
 hide: true
 status: working
 abbrlink: 242bd056
-date: 2022-08-04 22:04:57
+date: 2022-10-04 22:04:57
 ---
 
 > 在图中，如何判断一张图是否连通？如果删掉某条边，它还连通吗？有向图呢？这些操作有什么特殊性质吗？本文将探讨以 Tarjan 算法为核心的有关图的连通性的问题。
@@ -657,7 +657,7 @@ int main(void) {
 
 同无向图，将一个 SCC 缩成一个点，便是缩点。有向图在缩点之后可以得到 DAG，然后就可以进行拓扑排序之类的操作。
 
-[模板](https://www.luogu.com.cn/problem/P3387)。在做的时候可以发现一个 SCC 内的点都可以到达，缩点之后的权值相当于 SCC 内点的权值综合，而且在 Tarjan 的过程中就可以进行 DP：给 SCC 编号时要进行转移，最后也要加上 SCC 内的点权和。
+[模板](https://www.luogu.com.cn/problem/P3387)。在做的时候可以发现一个 SCC 内的点都可以到达，缩点之后的权值相当于 SCC 内点的权值综合，而且在 Tarjan 的过程中就可以进行 DP：设 $f(s)$ 代表从 $i$ 开始的最大权值，给 SCC 编号时要进行转移，最后也要加上 SCC 内的点权和。
 
 ```cpp
 #include <iostream>
@@ -1119,6 +1119,85 @@ int main(void) {
         q += (out[i] == 0);
     }
     printf("%d\n%d\n", ans, cnt == 1 ? 0 : max(p, q));
+    return 0;
+}
+```
+{% endfolding %}
+
+#### [APIO2009] 抢掠计划
+
+[Portal](https://www.luogu.com.cn/problem/P3627).
+
+显然是缩点后进行 DP，不过这里显然用以 $i$ 为终点的状态比较方便，所以 Tarjan 之后要重新建图。
+
+{% folding cyan::查看代码 %}
+```cpp
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int n, m, s, p;
+int low[500005], dfn[500005], num = 0;
+int st[500005], tot = 0, f[500005];
+int val[500005], sum[500005], c[500005], cnt = 0;
+bool ins[500005];
+vector<int> G[500005];
+
+void tarjan(int x) {
+    dfn[x] = low[x] = ++num;
+    ins[st[++tot] = x] = true;
+    for (int y : G[x])
+        if (!dfn[y]) { tarjan(y); low[x] = min(low[x], low[y]); }
+        else if (ins[y]) low[x] = min(low[x], dfn[y]);
+    if (low[x] == dfn[x]) {
+        int y; ++cnt;
+        do {
+            y = st[tot--]; ins[y] = false;
+            c[y] = cnt; sum[cnt] += val[y];
+        } while (x != y);
+    }
+}
+
+int in[500005];
+vector<int> G2[500005];
+
+int main(void)
+{
+    scanf("%d%d", &n, &m);
+    while (m--) {
+        int u, v;
+        scanf("%d%d", &u, &v);
+        G[u].emplace_back(v);
+    }
+    for (int i = 1; i <= n; ++i) scanf("%d", val + i);
+    scanf("%d%d", &s, &p);
+    tarjan(s);
+    for (int i = 1; i <= n; ++i)
+        if (c[i]) for (int j : G[i])
+            if (c[i] != c[j]) {
+                G2[c[i]].push_back(c[j]);
+                ++in[c[j]];
+            }
+    queue<int> q;
+    q.push(c[s]); f[c[s]] = sum[c[s]];
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        for (int v : G2[u]) {
+            f[v] = max(f[v], f[u] + sum[v]);
+            --in[v];
+            if (in[v] == 0) q.push(v);
+        }
+    }
+    int ans = 0;
+    for (int i = 1; i <= p; ++i) {
+        int x;
+        scanf("%d", &x);
+        ans = max(ans, f[c[x]]);
+    }
+    printf("%d\n", ans);
     return 0;
 }
 ```

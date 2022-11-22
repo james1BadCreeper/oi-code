@@ -1,37 +1,67 @@
 #include <iostream>
 #include <cstdio>
+#include <vector>
 
 using namespace std;
-typedef long long i64;
 
-i64 l, r;
-i64 f[15], poww[15];
-i64 ans1[15], ans2[15];
+int n, m, s, p;
+int low[500005], dfn[500005], num = 0;
+int st[500005], tot = 0, f[500005];
+int val[500005], sum[500005], c[500005], cnt = 0;
+bool ins[500005];
+vector<int> G[500005];
 
-void calc(i64 n, i64 *ans)
-{
-    static int a[15];
-    int len = 0; i64 tmp = n;
-    while (tmp) a[++len] = tmp % 10, n /= 10;
-    for (int i = len; i >= 1; --i) {
-        for (int j = 0; j < 10; ++j) ans[j] += f[i - 1] * a[i];
-        for (int j = 0; j < a[i]; ++j) ans[j] += poww[i - 1];
-        n -= poww[i - 1] * a[i]; ans[a[i]] += n + 1;
-        ans[0] -= poww[i - 1];
+void tarjan(int x) {
+    dfn[x] = low[x] = ++num;
+    ins[st[++tot] = x] = true;
+    for (int y : G[x])
+        if (!dfn[y]) { tarjan(y); low[x] = min(low[x], low[y]); }
+        else if (ins[y]) low[x] = min(low[x], dfn[y]);
+    if (low[x] == dfn[x]) {
+        int y; ++cnt;
+        do {
+            y = st[tot--]; ins[y] = false;
+            c[y] = cnt; sum[cnt] += val[y];
+        } while (x != y);
     }
 }
 
+int in[500005];
+vector<int> G2[500005];
+
 int main(void)
 {
-    cin >> l >> r;
-    poww[0] = 1;
-    for (int i = 1; i <= 13; ++i) {
-        f[i] = f[i - 1] * 10 + poww[i - 1]; 
-        poww[i] = poww[i - 1] * 10;
+    scanf("%d%d", &n, &m);
+    while (m--) {
+        int u, v;
+        scanf("%d%d", &u, &v);
+        G[u].emplace_back(v);
     }
-    calc(r, ans1); calc(l - 1, ans2);
-    for (int i = 0; i < 10; ++i)
-        printf("%lld ", ans1[i] - ans2[i]);
-    putchar('\n');
+    for (int i = 1; i <= n; ++i) scanf("%d", val + i);
+    scanf("%d%d", &s, &p);
+    tarjan(s);
+    for (int i = 1; i <= n; ++i)
+        if (!c[i]) for (int j : G[i])
+            if (c[i] != c[j]) {
+                G2[i].push_back(c[i], c[j]);
+                ++in[c[j]];
+            }
+    queue<int> q;
+    q.push(c[s]); f[c[s]] = sum[c[s]];
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        for (int v : G2[u].size()) {
+            f[v] = max(f[v], f[u] + sum[v]);
+            --in[v];
+            if (in[v] == 0) q.push(v);
+        }
+    }
+    int ans = 0;
+    for (int i = 1; i <= p; ++i) {
+        int x;
+        scanf("%d", &x);
+        ans = max(ans, f[c[x]]);
+    }
+    printf("%d\n", ans);
     return 0;
 }
