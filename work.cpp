@@ -17,7 +17,11 @@ void SA(double T, const double ET, const double delta) {
     for (int i = 1; i <= n; ++i) calc(i, i); 
     while (T > ET) {
         int x = rndint(1, n), y = rndint(1, n); 
-
+        i64 res = ans; 
+        int px = p[x], py = p[y]; 
+        calc(x, py); calc(y, px); 
+        if (res > ans || exp((ans - res) / T) <= rnddb(0, 1)) ; 
+        else ans = res, swap(p[x], p[y]); 
         T *= delta; 
     }
     for (int i = 1; i <= n; ++i) printf("%d ", p[i]);
