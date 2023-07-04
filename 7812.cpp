@@ -11,9 +11,9 @@ inline double rnddb(double l, double r) { return uniform_real_distribution<>(l, 
 
 void calc(int x, int y) {
     int A = p[(x - 2 + n) % n], B = p[(x - 1 + n) % n], &C = p[x], D = p[(x + 1) % n], E = p[(x + 2) % n]; 
-    ans -= 1ll * a[A] * a[B] * a[C] * B + 1ll * a[B] * a[C] * a[D] * B + 1ll * a[B] * a[C] * a[D] * C + 1ll * a[C] * a[D] * a[E] * D; 
+    ans -= 1ll * a[A] * a[B] * a[C] * (B + 1) + 1ll * a[B] * a[C] * a[D] * (C + 1) + 1ll * a[C] * a[D] * a[E] * (D + 1); 
     C = y; 
-    ans -= 1ll * a[A] * a[B] * a[C] * B + 1ll * a[B] * a[C] * a[D] * B + 1ll * a[B] * a[C] * a[D] * C + 1ll * a[C] * a[D] * a[E] * D; 
+    ans -= 1ll * a[A] * a[B] * a[C] * (B + 1) + 1ll * a[B] * a[C] * a[D] * (C + 1) + 1ll * a[C] * a[D] * a[E] * (D + 1); 
 }
 
 void SA(double T, const double ET, const double delta) {
@@ -34,6 +34,6 @@ void SA(double T, const double ET, const double delta) {
 int main(void) {
     scanf("%d", &n); 
     for (int i = 0; i < n; ++i) scanf("%d", a + i); 
-    SA(1e15, -1e15, 0.999); 
+    SA(1e10, -1e10, 0.99); 
     return 0; 
 }
